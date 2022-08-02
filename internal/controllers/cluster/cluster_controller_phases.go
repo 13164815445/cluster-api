@@ -238,20 +238,6 @@ func (r *Reconciler) reconcileControlPlane(ctx context.Context, cluster *cluster
 		conditions.WithFallbackValue(ready, clusterv1.WaitingForControlPlaneFallbackReason, clusterv1.ConditionSeverityInfo, ""),
 	)
 
-	// Update cluster.Status.ControlPlaneInitialized if it hasn't already been set
-	// Determine if the control plane provider is initialized.
-	if !conditions.IsTrue(cluster, clusterv1.ControlPlaneInitializedCondition) {
-		initialized, err := external.IsInitialized(controlPlaneConfig)
-		if err != nil {
-			return ctrl.Result{}, err
-		}
-		if initialized {
-			conditions.MarkTrue(cluster, clusterv1.ControlPlaneInitializedCondition)
-		} else {
-			conditions.MarkFalse(cluster, clusterv1.ControlPlaneInitializedCondition, clusterv1.WaitingForControlPlaneProviderInitializedReason, clusterv1.ConditionSeverityInfo, "Waiting for control plane provider to indicate the control plane has been initialized")
-		}
-	}
-
 	return ctrl.Result{}, nil
 }
 
