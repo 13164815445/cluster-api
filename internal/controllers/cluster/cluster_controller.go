@@ -480,10 +480,10 @@ func (r *Reconciler) reconcileControlPlaneInitialized(ctx context.Context, clust
 	fmt.Println("start reconcileControlPlaneInitialized")
 	// Skip checking if the control plane is initialized when using a Control Plane Provider (this is reconciled in
 	// reconcileControlPlane instead).
-	if cluster.Spec.ControlPlaneRef != nil {
-		log.V(4).Info("Skipping reconcileControlPlaneInitialized because cluster has a controlPlaneRef")
-		return ctrl.Result{}, nil
-	}
+	//if cluster.Spec.ControlPlaneRef != nil {
+	//	log.V(4).Info("Skipping reconcileControlPlaneInitialized because cluster has a controlPlaneRef")
+	//	return ctrl.Result{}, nil
+	//}
 
 	if conditions.IsTrue(cluster, clusterv1.ControlPlaneInitializedCondition) {
 		log.V(4).Info("Skipping reconcileControlPlaneInitialized because control plane already initialized")
