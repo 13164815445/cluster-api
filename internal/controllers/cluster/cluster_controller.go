@@ -129,6 +129,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (_ ctrl.Re
 	}
 
 	defer func() {
+		fmt.Println(cluster.Status.Conditions)
 		// Always reconcile the Status.Phase field.
 		r.reconcilePhase(ctx, cluster)
 
@@ -476,6 +477,7 @@ func (c clusterDescendants) filterOwnedDescendants(cluster *clusterv1.Cluster) (
 func (r *Reconciler) reconcileControlPlaneInitialized(ctx context.Context, cluster *clusterv1.Cluster) (ctrl.Result, error) {
 	log := ctrl.LoggerFrom(ctx)
 
+	fmt.Println("start reconcileControlPlaneInitialized")
 	// Skip checking if the control plane is initialized when using a Control Plane Provider (this is reconciled in
 	// reconcileControlPlane instead).
 	if cluster.Spec.ControlPlaneRef != nil {
@@ -495,8 +497,11 @@ func (r *Reconciler) reconcileControlPlaneInitialized(ctx context.Context, clust
 		log.Error(err, "unable to determine ControlPlaneInitialized")
 		return ctrl.Result{}, err
 	}
-
+	fmt.Println(len(machines))
 	for _, m := range machines {
+		fmt.Println(m.Name)
+		fmt.Println(m.Status.NodeRef)
+		fmt.Println(m.Labels)
 		if util.IsControlPlaneMachine(m) && m.Status.NodeRef != nil {
 			conditions.MarkTrue(cluster, clusterv1.ControlPlaneInitializedCondition)
 			return ctrl.Result{}, nil
